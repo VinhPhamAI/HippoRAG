@@ -13,6 +13,8 @@ from openai import OpenAI
 from openai import AzureOpenAI
 from packaging import version
 from tenacity import retry, stop_after_attempt, wait_fixed
+from dotenv import load_dotenv
+load_dotenv()
 
 from ..utils.config_utils import BaseConfig
 from ..utils.llm_utils import (
@@ -145,7 +147,7 @@ class CacheOpenAI(BaseLLM):
         self.max_retries = kwargs.get("max_retries", 2)
 
         if self.global_config.azure_endpoint is None:
-            self.openai_client = OpenAI(base_url=self.llm_base_url, http_client=client, max_retries=self.max_retries)
+            self.openai_client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"), base_url=self.llm_base_url, http_client=client, max_retries=self.max_retries)
         else:
             self.openai_client = AzureOpenAI(api_version=self.global_config.azure_endpoint.split('api-version=')[1],
                                              azure_endpoint=self.global_config.azure_endpoint, max_retries=self.max_retries)
