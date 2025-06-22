@@ -4,9 +4,9 @@ import json
 import argparse
 import logging
 
-from src.hipporag import HippoRAG
-
 def main():
+    # Import delayed để tránh lỗi multiprocessing trên macOS
+    from src.hipporag import HippoRAG
 
     # Prepare datasets and evaluation
     docs = [
@@ -21,26 +21,23 @@ def main():
         "Montebello is a part of Rockland County."
     ]
 
-    save_dir = 'outputs/openai_test'  # Define save directory for HippoRAG objects (each LLM/Embedding model combination will create a new subdirectory)
-    llm_model_name = 'gpt-4o-mini'  # Any OpenAI model name
-    embedding_model_name = 'text-embedding-3-small'  # Embedding model name (NV-Embed, GritLM or Contriever for now)
+    save_dir = 'outputs/openai_test'
+    llm_model_name = 'gpt-4o-mini'
+    embedding_model_name = 'text-embedding-3-small'
 
-    # Startup a HippoRAG instance
+    # Khởi tạo và sử dụng HippoRAG
     hipporag = HippoRAG(save_dir=save_dir,
                         llm_model_name=llm_model_name,
                         embedding_model_name=embedding_model_name)
 
-    # Run indexing
     hipporag.index(docs=docs)
 
-    # Separate Retrieval & QA
     queries = [
         "What is George Rankin's occupation?",
         "How did Cinderella reach her happy ending?",
         "What county is Erik Hort's birthplace a part of?"
     ]
 
-    # For Evaluation
     answers = [
         ["Politician"],
         ["By going to the ball."],
@@ -57,19 +54,17 @@ def main():
     ]
 
     print(hipporag.rag_qa(queries=queries,
-                                  gold_docs=gold_docs,
-                                  gold_answers=answers)[-2:])
+                          gold_docs=gold_docs,
+                          gold_answers=answers)[-2:])
 
-    # Startup a HippoRAG instance
     hipporag = HippoRAG(save_dir=save_dir,
                         llm_model_name=llm_model_name,
                         embedding_model_name=embedding_model_name)
 
     print(hipporag.rag_qa(queries=queries,
-                                  gold_docs=gold_docs,
-                                  gold_answers=answers)[-2:])
+                          gold_docs=gold_docs,
+                          gold_answers=answers)[-2:])
 
-    # Startup a HippoRAG instance
     hipporag = HippoRAG(save_dir=save_dir,
                         llm_model_name=llm_model_name,
                         embedding_model_name=embedding_model_name)
@@ -79,9 +74,9 @@ def main():
         "Sam Hort's birthplace is Montebello.",
         "Bill Hort's birthplace is Montebello.",
         "Cam Hort's birthplace is Montebello.",
-        "Montebello is a part of Rockland County.."]
+        "Montebello is a part of Rockland County.."
+    ]
 
-    # Run indexing
     hipporag.index(docs=new_docs)
 
     print(hipporag.rag_qa(queries=queries,
@@ -101,6 +96,7 @@ def main():
     print(hipporag.rag_qa(queries=queries,
                           gold_docs=gold_docs,
                           gold_answers=answers)[-2:])
+
 
 if __name__ == "__main__":
     main()
