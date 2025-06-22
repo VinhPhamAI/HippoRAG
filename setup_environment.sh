@@ -20,7 +20,7 @@ read -p "Enter your OpenAI API key (sk-...): " OPENAI_KEY
 
 # Update or insert the key in .env
 if grep -q "^OPENAI_API_KEY=" .env; then
-  sed -i.bak "s/^OPENAI_API_KEY=.*/OPENAI_API_KEY=$OPENAI_KEY/" .env
+  sed -i "s/^OPENAI_API_KEY=.*/OPENAI_API_KEY=$OPENAI_KEY/" .env
 else
   echo "OPENAI_API_KEY=$OPENAI_KEY" >> .env
 fi
